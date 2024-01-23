@@ -9,6 +9,8 @@ type User {
   roles: [String!]!
   isActive: Boolean!
   lastUpdateBy: User
+  itemCount: Int!
+  items(offset: Int = 0, limit: Int = 10, search: String): [Ticket!]!
 }
 
 type Ticket {

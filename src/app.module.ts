@@ -30,9 +30,9 @@ import { CommonModule } from './common/common.module';
       type: 'postgres',
       host: process.env.DB_HOST,
       port: +process.env.DB_PORT,
-      username: process.env.BD_USERNAME,
-      password: process.env.BD_PASSWORD,
-      database: process.env.BD_NAME,
+      username: process.env.DB_USERNAME,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_NAME,
       entities: [],
       synchronize: true,
       autoLoadEntities: true
@@ -46,4 +46,13 @@ import { CommonModule } from './common/common.module';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule {
+  constructor() {
+    console.log("host", process.env.DB_HOST);
+    console.log("port", process.env.DB_PORT);
+    console.log("username", process.env.DB_USERNAME);
+    console.log("password", process.env.DB_PASSWORD);
+    console.log("database", process.env.DB_NAME);
+    
+  }
+}
