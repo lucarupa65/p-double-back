@@ -14,6 +14,7 @@ type User {
   email: String!
   roles: [String!]!
   isActive: Boolean!
+  lastUpdateBy: User
 }
 
 type AuthResponse {
@@ -24,15 +25,25 @@ type AuthResponse {
 type Query {
   tickets: [Ticket!]!
   ticket(id: ID!): Ticket!
-  users: [User!]!
+  users(roles: [ValidRoles!] = []): [User!]!
   user(id: ID!): User!
   revalidate: AuthResponse!
+}
+
+"""
+Ullamco labore ut ut adipisicing commodo sit elit ullamco eiusmod ut mollit sint.
+"""
+enum ValidRoles {
+  admin
+  user
+  superUser
 }
 
 type Mutation {
   createTicket(createTicketInput: CreateTicketInput!): Ticket!
   updateTicket(updateTicketInput: UpdateTicketInput!): Ticket!
   removeTicket(id: ID!): Ticket!
+  updateUser(updateUserInput: UpdateUserInput!): User!
   blockUser(id: ID!): User!
   signup(signupInput: SignupInput!): AuthResponse!
   login(loginInput: LoginInput!): AuthResponse!
@@ -46,6 +57,15 @@ input UpdateTicketInput {
   descrition: String
   id: ID!
   state: Boolean
+}
+
+input UpdateUserInput {
+  email: String
+  fullName: String
+  password: String
+  id: ID!
+  roles: [ValidRoles!]
+  isActive: Boolean
 }
 
 input SignupInput {

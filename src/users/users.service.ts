@@ -16,6 +16,7 @@ import { UpdateUserInput } from './dto/update-user.input';
 import { SignupInput } from 'src/auth/dto/signup.input';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import { ValidRoles } from 'src/auth/enums/valid-roles.enum';
 
 @Injectable()
 export class UsersService {
@@ -39,8 +40,13 @@ export class UsersService {
     }
   }
 
-  async findAll(): Promise<User[]> {
-    throw new Error('No implememntado');
+  async findAll(roles: ValidRoles[]): Promise<User[]> {
+    if (roles.length === 0) return this.usersRepository.find();
+    return this.usersRepository
+      .createQueryBuilder()
+      .andWhere('ARRAY[roles] && ARRAY[:...roles]')
+      .setParameter('roles', roles)
+      .getMany();
   }
 
   async findOneByEmail(email: string): Promise<User> {
@@ -62,12 +68,32 @@ export class UsersService {
     }
   }
 
-  update(id: number, updateUserInput: UpdateUserInput) {
-    throw new Error('No implememntado');
+  async update(
+    id: string,
+    updateUserInput: UpdateUserInput,
+    updateBy: User,
+  ): Promise<User> {
+    try {
+      const user = await this.usersRepository.preload({
+        ...updateUserInput,
+        id,
+      });
+
+      user.lastUpdateBy = updateBy;
+
+      return await this.usersRepository.save(user);
+    } catch (error) {
+      this.handleDBErrors(error);
+    }
   }
 
-  async block(id: string): Promise<User> {
-    throw new Error('No implememntado');
+  async block(id: string, adminUser: User): Promise<User> {
+    const userToBlock = await this.findOneById(id);
+
+    userToBlock.isActive = false;
+    userToBlock.lastUpdateBy = adminUser;
+
+    return await this.usersRepository.save(userToBlock);
   }
 
   private handleDBErrors(error: any): never {
