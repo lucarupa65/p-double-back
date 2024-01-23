@@ -9,6 +9,8 @@ import { ApolloServerPluginLandingPageLocalDefault  } from '@apollo/server/plugi
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TicketModule } from './ticket/ticket.module';
+import { UsersModule } from './users/users.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -34,6 +36,8 @@ import { TicketModule } from './ticket/ticket.module';
       autoLoadEntities: true
     }),
     TicketModule,
+    UsersModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

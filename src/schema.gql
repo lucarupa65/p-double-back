@@ -8,15 +8,34 @@ type Ticket {
   state: Boolean!
 }
 
+type User {
+  id: ID!
+  fullName: String!
+  email: String!
+  roles: [String!]!
+  isActive: Boolean!
+}
+
+type AuthResponse {
+  token: String!
+  user: User!
+}
+
 type Query {
   tickets: [Ticket!]!
   ticket(id: ID!): Ticket!
+  users: [User!]!
+  user(id: ID!): User!
+  revalidate: AuthResponse!
 }
 
 type Mutation {
   createTicket(createTicketInput: CreateTicketInput!): Ticket!
   updateTicket(updateTicketInput: UpdateTicketInput!): Ticket!
   removeTicket(id: ID!): Ticket!
+  blockUser(id: ID!): User!
+  signup(signupInput: SignupInput!): AuthResponse!
+  login(loginInput: LoginInput!): AuthResponse!
 }
 
 input CreateTicketInput {
@@ -27,4 +46,15 @@ input UpdateTicketInput {
   descrition: String
   id: ID!
   state: Boolean
+}
+
+input SignupInput {
+  email: String!
+  fullName: String!
+  password: String!
+}
+
+input LoginInput {
+  email: String!
+  password: String!
 }
