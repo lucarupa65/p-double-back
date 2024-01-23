@@ -6,6 +6,7 @@ import { CreateTicketInput, UpdateTicketInput } from './dto/inputs';
 import { Ticket } from './entities/ticket.entity';
 import { User } from 'src/users/entities/user.entity';
 import { ValidRoles } from 'src/auth/enums/valid-roles.enum';
+import { PaginationArgs, SearchArgs } from 'src/common/dto/args';
 
 @Injectable()
 export class TicketService {
@@ -33,11 +34,30 @@ export class TicketService {
     return await this.ticketRepository.save(newTicket);
   }
 
-  async findAll(currentUser: User): Promise<Ticket[]> {
-    if (this.IsAdmin(currentUser)) return this.ticketRepository.find();
-    return this.ticketRepository.findBy({
-      userCreateBy: currentUser,
-    });
+  async findAll(
+    currentUser: User,
+    paginationArgs: PaginationArgs,
+    searchArgs: SearchArgs,
+  ): Promise<Ticket[]> {
+    const { limit, offset } = paginationArgs;
+    const { search } = searchArgs;
+
+    const queryBuilder = this.ticketRepository
+      .createQueryBuilder()
+      .take(limit)
+      .skip(offset);
+
+    if (!this.IsAdmin(currentUser))
+      queryBuilder.where(`"userCreateBy" = :userCreateBy`, {
+        userCreateBy: currentUser.id,
+      });
+
+    if (search) {
+      queryBuilder.andWhere('LOWER(descrition) like :descrition', {
+        descrition: `%${search.toLowerCase()}%`,
+      });
+    }
+    return queryBuilder.getMany();
   }
 
   async findOne(id: string, currentUser: User): Promise<Ticket> {
@@ -64,8 +84,7 @@ export class TicketService {
     updateTicketInput: UpdateTicketInput,
     currentUser: User,
   ): Promise<Ticket> {
-
-    await this.findOne(id, currentUser)
+    await this.findOne(id, currentUser);
 
     const ticket = await this.ticketRepository.preload({
       ...updateTicketInput,
@@ -79,5 +98,15 @@ export class TicketService {
     const ticket = await this.findOne(id, currentUser);
     await this.ticketRepository.remove(ticket);
     return { ...ticket, id };
+  }
+
+  async itemCountByUser(user: User): Promise<number> {
+    return this.ticketRepository.count({
+      where: {
+        userCreateBy: {
+          id: user.id,
+        },
+      },
+    });
   }
 }

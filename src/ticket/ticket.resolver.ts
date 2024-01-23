@@ -9,6 +9,7 @@ import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { ValidRoles } from 'src/auth/enums/valid-roles.enum';
 import { User } from 'src/users/entities/user.entity';
 import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
+import { PaginationArgs, SearchArgs } from 'src/common/dto/args';
 
 @Resolver(() => Ticket)
 @UseGuards(JwtAuthGuard)
@@ -24,8 +25,12 @@ export class TicketResolver {
   }
 
   @Query(() => [Ticket], { name: 'tickets' })
-  async findAll(@CurrentUser([ValidRoles.user]) user: User): Promise<Ticket[]> {
-    return this.ticketService.findAll(user);
+  async findAll(
+    @CurrentUser([ValidRoles.user]) user: User,
+    @Args() paginationArgs: PaginationArgs,
+    @Args() searchArgs: SearchArgs
+  ): Promise<Ticket[]> {
+    return this.ticketService.findAll(user,paginationArgs,searchArgs);
   }
 
   @Query(() => Ticket, { name: 'ticket' })

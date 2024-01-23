@@ -54,6 +54,6 @@ export class User {
   @OneToMany(() => Ticket, (ticket) => ticket.userCreateBy, {
     lazy: true,
   })
-  @Field(() => [Ticket])
+  // @Field(() => [Ticket])
   tickest: Ticket[];
 }
