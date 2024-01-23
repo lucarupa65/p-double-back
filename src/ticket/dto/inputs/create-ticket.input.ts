@@ -1,5 +1,5 @@
-import { InputType, Int, Field } from '@nestjs/graphql';
-import { IsNotEmpty, IsString, minLength } from 'class-validator';
+import { InputType, Field } from '@nestjs/graphql';
+import { IsBoolean, IsNotEmpty, IsOptional, IsString, minLength } from 'class-validator';
 
 @InputType()
 export class CreateTicketInput {
@@ -8,6 +8,11 @@ export class CreateTicketInput {
   @IsNotEmpty()
   @IsString()
   descrition: string;
+
+  @Field(() => Boolean, { nullable: true })
+  @IsBoolean()
+  @IsOptional()
+  state?: boolean
 
 
 }

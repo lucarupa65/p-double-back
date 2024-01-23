@@ -50,16 +50,20 @@ type Mutation {
   blockUser(id: ID!): User!
   signup(signupInput: SignupInput!): AuthResponse!
   login(loginInput: LoginInput!): AuthResponse!
+
+  """Ejecuta la contrucción de la base de datos"""
+  executeSeed: Boolean!
 }
 
 input CreateTicketInput {
   descrition: String!
+  state: Boolean
 }
 
 input UpdateTicketInput {
   descrition: String
-  id: ID!
   state: Boolean
+  id: ID!
 }
 
 input UpdateUserInput {

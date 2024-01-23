@@ -9,6 +9,10 @@ import { Ticket } from './entities/ticket.entity';
   providers: [TicketResolver, TicketService],
   imports: [
     TypeOrmModule.forFeature([Ticket])
+  ],
+  exports: [
+    TicketService,
+    TypeOrmModule
   ]
 })
 export class TicketModule {}

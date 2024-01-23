@@ -28,7 +28,7 @@ export class TicketService {
   ): Promise<Ticket> {
     const newTicket = this.ticketRepository.create(createTicketInput);
     newTicket.userCreateBy = userCreateBy;
-    newTicket.state = false;
+    newTicket.state = createTicketInput.state ? createTicketInput.state : false;
 
     return await this.ticketRepository.save(newTicket);
   }
