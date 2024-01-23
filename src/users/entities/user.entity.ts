@@ -1,9 +1,11 @@
 import { ObjectType, Field, Int, ID } from '@nestjs/graphql';
+import { Ticket } from 'src/ticket/entities/ticket.entity';
 import {
   Column,
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -48,4 +50,10 @@ export class User {
   @JoinColumn({ name: 'lastUpdateBy' })
   @Field(() => User, { nullable: true })
   lastUpdateBy?: User;
+
+  @OneToMany(() => Ticket, (ticket) => ticket.userCreateBy, {
+    lazy: true,
+  })
+  @Field(() => [Ticket])
+  tickest: Ticket[];
 }

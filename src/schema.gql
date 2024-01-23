@@ -2,18 +2,21 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type Ticket {
-  id: ID!
-  descrition: String!
-  state: Boolean!
-}
-
 type User {
   id: ID!
   fullName: String!
   email: String!
   roles: [String!]!
   isActive: Boolean!
+  lastUpdateBy: User
+  tickest: [Ticket!]!
+}
+
+type Ticket {
+  id: ID!
+  descrition: String!
+  state: Boolean!
+  userCreateBy: User!
   lastUpdateBy: User
 }
 

@@ -1,12 +1,19 @@
 import { ObjectType, Field, ID } from '@nestjs/graphql';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { User } from 'src/users/entities/user.entity';
+import {
+  Column,
+  Entity,
+  Index,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
-@Entity({name: 'tickets'})
+@Entity({ name: 'tickets' })
 @ObjectType()
 export class Ticket {
-
   @PrimaryGeneratedColumn('uuid')
-  @Field( () => ID )
+  @Field(() => ID)
   id: string;
 
   @Column()
@@ -18,5 +25,19 @@ export class Ticket {
   state: boolean;
 
   // usres
+  @ManyToOne(() => User, (user) => user.tickest, {
+    nullable: false,
+    lazy: true,
+  })
+  @Index('userId-index')
+  @Field(() => User)
+  userCreateBy: User;
 
+  @ManyToOne(() => User, (user) => user.id, {
+    nullable: true,
+    lazy: true,
+  })
+  @JoinColumn({ name: 'lastUpdateBy' })
+  @Field(() => User, { nullable: true })
+  lastUpdateBy?: User;
 }
