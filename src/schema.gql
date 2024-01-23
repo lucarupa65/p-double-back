@@ -2,28 +2,29 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type Tickest {
-  """Example field (placeholder)"""
-  exampleField: Int!
+type Ticket {
+  id: ID!
+  descrition: String!
+  state: Boolean!
 }
 
 type Query {
-  tickest(id: Int!): Tickest!
+  tickets: [Ticket!]!
+  ticket(id: ID!): Ticket!
 }
 
 type Mutation {
-  createTickest(createTickestInput: CreateTickestInput!): Tickest!
-  updateTickest(updateTickestInput: UpdateTickestInput!): Tickest!
-  removeTickest(id: Int!): Tickest!
+  createTicket(createTicketInput: CreateTicketInput!): Ticket!
+  updateTicket(updateTicketInput: UpdateTicketInput!): Ticket!
+  removeTicket(id: ID!): Ticket!
 }
 
-input CreateTickestInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
+input CreateTicketInput {
+  descrition: String!
 }
 
-input UpdateTickestInput {
-  """Example field (placeholder)"""
-  exampleField: Int
-  id: Int!
+input UpdateTicketInput {
+  descrition: String
+  id: ID!
+  state: Boolean
 }

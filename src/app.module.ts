@@ -8,7 +8,7 @@ import { ApolloServerPluginLandingPageLocalDefault  } from '@apollo/server/plugi
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { TickestModule } from './tickest/tickest.module';
+import { TicketModule } from './ticket/ticket.module';
 
 @Module({
   imports: [
@@ -33,7 +33,7 @@ import { TickestModule } from './tickest/tickest.module';
       synchronize: true,
       autoLoadEntities: true
     }),
-    TickestModule,
+    TicketModule,
   ],
   controllers: [AppController],
   providers: [AppService],
